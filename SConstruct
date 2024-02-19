@@ -11,7 +11,7 @@ def validate_parent_dir(key, val, env):
         raise UserError("'%s' is not a directory: %s" % (key, os.path.dirname(val)))
 
 
-libname = "EXTENSION-NAME"
+libname = "gdllamacpp"
 projectdir = "demo"
 
 localEnv = Environment(tools=["default"], PLATFORM="")
@@ -59,10 +59,17 @@ if env["platform"] == "macos":
     platlibname = "{}.{}.{}".format(libname, env["platform"], env["target"])
     file = "{}.framework/{}".format(env["platform"], platlibname, platlibname)
 
+
+llama_lib='llama'
+llama_libpath='llama.cpp/install/lib'
+env.Append( CPPDEFINES=['LLAMA_SHARED'] )
+env.Append( LIBPATH=[llama_libpath] )
+env.Append( LIBS=[llama_lib] )
+
 libraryfile = "bin/{}/{}".format(env["platform"], file)
 library = env.SharedLibrary(
     libraryfile,
-    source=sources,
+    source=sources
 )
 
 copy = env.InstallAs("{}/bin/{}/lib{}".format(projectdir, env["platform"], file), library)
