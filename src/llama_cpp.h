@@ -30,6 +30,7 @@ public:
 	~LlamaCpp();
 
 	bool load_model( const String & file_name );
+	int tokenized_length( const String & prompt );
 	bool start( const String & prompt );
 	Variant next();
 

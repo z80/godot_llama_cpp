@@ -153,6 +153,17 @@ public:
 		return true;
 	}
 
+	int tokenized_length( const String & prompt )
+	{
+		const PackedByteArray prompt_array = prompt.to_utf8_buffer();
+		const char * prompt_stri = (const char *)prompt_array.ptr();
+
+		tokens_list = llama_tokenize( ctx, prompt_stri, false, false );
+		const int ret = tokens_list.size();
+
+		return ret;
+	}
+
 	bool start( const String& prompt )
 	{
 		const PackedByteArray prompt_array = prompt.to_utf8_buffer();
@@ -267,9 +278,10 @@ const int LlamaCpp::PD::n_len = 512;
 
 void LlamaCpp::_bind_methods()
 {
-	ClassDB::bind_method( D_METHOD("load_model", "file_name"), &LlamaCpp::load_model );
-	ClassDB::bind_method( D_METHOD("start", "prompt"),         &LlamaCpp::start );
-	ClassDB::bind_method( D_METHOD("next"),                    &LlamaCpp::next );
+	ClassDB::bind_method( D_METHOD("load_model",       "file_name"), &LlamaCpp::load_model );
+	ClassDB::bind_method( D_METHOD("tokenized_length", "prompt"),    &LlamaCpp::tokenized_length );
+	ClassDB::bind_method( D_METHOD("start",            "prompt"),    &LlamaCpp::start );
+	ClassDB::bind_method( D_METHOD("next"),                          &LlamaCpp::next );
 
 	//ADD_PROPERTY( PropertyInfo( Variant::STRING, "seed" ), "set_seed", "get_seed" );
 }
@@ -288,6 +300,12 @@ bool LlamaCpp::load_model( const String & file_name )
 {
 	const bool ret = pd->load_model(file_name);
 	return ret;
+}
+
+int LlamaCpp::tokenized_length( const String & prompt )
+{
+    const int ret = pd->tokenized_length( prompt );
+    return ret;
 }
 
 bool LlamaCpp::start( const String & prompt )
