@@ -52,6 +52,9 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
+env.Append(CPPPATH=["src/src/"])
+env.Append(CPPPATH=["llama.cpp/install/include"])
+sources += Glob( "src/src/*.cpp" )
 
 file = "{}{}{}".format(libname, env["suffix"], env["SHLIBSUFFIX"])
 
